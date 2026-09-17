@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { MongoClient, ObjectId } = require('mongodb');
 
 const app = express();
@@ -7,6 +8,9 @@ const port = 3000;
 const mongoUrl = 'mongodb://localhost:27017';
 const client = new MongoClient(mongoUrl);
 
+app.use(cors({
+  origin: 'http://localhost:4200'
+}));
 app.use(express.json());
 
 async function startServer() {
