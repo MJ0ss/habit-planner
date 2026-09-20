@@ -44,4 +44,10 @@ export class HabitList implements OnInit {
       this.loadHabits();
     })
   }
+
+  deleteHabit(id: string) {
+    this.habitService.deleteHabit(id).subscribe(() => {
+      this.loadHabits();
+    });
+  }
 }

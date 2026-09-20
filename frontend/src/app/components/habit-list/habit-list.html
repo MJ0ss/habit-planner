@@ -4,6 +4,7 @@
   @for (habit of habits(); track habit._id) {
     <li>
       {{ habit.name }} - {{ habit.type }}
+      <button (click)="deleteHabit(habit._id)">Löschen</button>
     </li>
   }
 </ul>

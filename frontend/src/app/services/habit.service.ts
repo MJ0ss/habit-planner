@@ -18,4 +18,8 @@ export class HabitService {
   addHabit(habit: Omit<Habit, '_id'>) {
     return this.http.post<Habit>(this.apiUrl, habit);
   }
+
+  deleteHabit(id: string) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }
