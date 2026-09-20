@@ -19,6 +19,8 @@ export class HabitList implements OnInit {
   newHabitName = '';
   newHabitType: 'positive' | 'negative' = 'positive';
 
+  editingHabitId: string | null = null;
+
   ngOnInit() {
     this.loadHabits();
   } 
@@ -43,6 +45,29 @@ export class HabitList implements OnInit {
 
       this.loadHabits();
     })
+  }
+
+  editHabit(habit: Habit) {
+    this.editingHabitId = habit._id;
+    this.newHabitName = habit.name;
+    this.newHabitType = habit.type;
+  }
+
+  saveHabit() {
+    if (!this.editingHabitId || !this.newHabitName.trim()) {
+      return;
+    }
+
+    this.habitService.updateHabit(this.editingHabitId, {
+      name: this.newHabitName,
+      type: this.newHabitType
+    }).subscribe(() => {
+      this.editingHabitId = null;
+      this.newHabitName = '';
+      this.newHabitType = 'positive';
+
+      this.loadHabits();
+    });
   }
 
   deleteHabit(id: string) {

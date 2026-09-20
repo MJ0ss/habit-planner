@@ -4,6 +4,8 @@
   @for (habit of habits(); track habit._id) {
     <li>
       {{ habit.name }} - {{ habit.type }}
+
+      <button (click)="editHabit(habit)">Bearbeiten</button>
       <button (click)="deleteHabit(habit._id)">Löschen</button>
     </li>
   }
@@ -22,4 +24,8 @@
   <option value="negative">Negativ</option>
 </select>
 
-<button (click)="addHabit()">Habit hinzufügen</button>
+@if (editingHabitId) {
+  <button (click)="saveHabit()">Änderungen speichern</button>
+} @else {
+  <button (click)="addHabit()">Habit hinzufügen</button>
+}
