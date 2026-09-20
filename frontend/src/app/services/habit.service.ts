@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Habit } from '../models/habit';
+
 @Injectable({
   providedIn: 'root',
 })
-export class Habit {
+export class HabitService {
   private apiUrl = 'http://localhost:3000/api/habits';
 
   constructor(private http: HttpClient) {}
 
   getHabits() {
-    return this.http.get(this.apiUrl);
+    return this.http.get<Habit[]>(this.apiUrl);
   }
 }

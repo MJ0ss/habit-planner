@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
-import { Habit } from '../../services/habit';
+import { HabitService } from '../../services/habit.service';
 
 @Component({
   imports: [],
@@ -11,9 +11,9 @@ import { Habit } from '../../services/habit';
 })
 
 export class HabitList {
-  private habitService = inject(Habit);
+  private habitService = inject(HabitService);
 
   habits = toSignal(this.habitService.getHabits(), {
-    initialValue: [] as any[]
+    initialValue: []
   });
 }
