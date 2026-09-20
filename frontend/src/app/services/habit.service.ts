@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
 import { Habit } from '../models/habit';
 
@@ -9,10 +9,18 @@ import { Habit } from '../models/habit';
 export class HabitService {
   private apiUrl = 'http://localhost:3000/api/habits';
 
+  habits = signal<Habit[]>([]);
+
   constructor(private http: HttpClient) {}
 
   getHabits() {
     return this.http.get<Habit[]>(this.apiUrl);
+  }
+
+  loadHabits() {
+    this.http.get<Habit[]>(this.apiUrl).subscribe((habits) => {
+      this.habits.set(habits);
+    });
   }
 
   addHabit(habit: Omit<Habit, '_id'>) {

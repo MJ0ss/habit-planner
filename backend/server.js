@@ -18,7 +18,9 @@ async function startServer() {
     await client.connect();
 
     const db = client.db('habit-planner');
+
     const habits = db.collection('habits');
+    const habitEntries = db.collection('habitEntries');
 
     console.log('Mit MongoDB verbunden');
 
@@ -90,6 +92,60 @@ async function startServer() {
             _id: result.insertedId,
             ...habit
         });
+    });
+
+    app.post('/api/habit-entries', async (req, res) => {
+        const habitEntry = req.body;
+
+        const result = await habitEntries.insertOne(habitEntry);
+
+        res.status(201).json({
+            _id: result.insertedId,
+            ...habitEntry
+        });
+    });
+
+    app.get('/api/habit-entries', async (req, res) => {
+        const result = await habitEntries.find().toArray();
+        res.json(result);
+    });
+
+    app.put('/api/habit-entries/:id', async (req, res) => {
+        const id = req.params.id;
+        const updatedEntry = req.body;
+
+        const result = await habitEntries.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updatedEntry }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+            message: 'HabitEntry nicht gefunden'
+            });
+        }
+
+        const habitEntry = await habitEntries.findOne({
+            _id: new ObjectId(id)
+        });
+
+        res.json(habitEntry);
+    });
+
+    app.delete('/api/habit-entries/:id', async (req, res) => {
+        const id = req.params.id;
+
+        const result = await habitEntries.deleteOne({
+            _id: new ObjectId(id)
+        });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+            message: 'HabitEntry nicht gefunden'
+            });
+        }
+
+        res.status(204).send();
     });
 
     app.listen(port, () => {

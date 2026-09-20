@@ -1,0 +1,68 @@
+<h2>{{ monthName }}</h2>
+
+<div class="calendar">
+  @for (weekDay of weekDays; track weekDay) {
+    <div class="weekday">
+      {{ weekDay }}
+    </div>
+  }
+
+  @for (empty of [].constructor(firstDayOffset); track $index) {
+    <div class="day empty"></div>
+  }
+
+    @for (day of daysInMonth; track day) {
+    <div class="day"
+        (click)="selectDay(day)"
+        >
+        <strong>{{ day }}</strong>
+
+        @for (entry of getEntriesForDay(day); track entry._id) {
+          <div>
+            {{ getHabitName(entry.habitId) }} - {{ entry.status }}
+
+            @if (entry.status === 'planned') {
+              <button (click)="completeHabit(entry); $event.stopPropagation()">
+                Erledigt
+              </button>
+
+              <button (click)="missHabit(entry); $event.stopPropagation()">
+                Verpasst
+              </button>
+            }
+          </div>
+        }
+    </div>
+    }
+</div>
+
+@if (selectedDay()) {
+  <div>
+    <h3>Habit planen</h3>
+
+    <p>
+      Ausgewählter Tag: {{ selectedDay() }}. {{ monthName }}
+    </p>
+
+    <select [(ngModel)]="selectedHabitId">
+      <option value="">Habit auswählen</option>
+
+      @for (habit of habits(); track habit._id) {
+        <option [value]="habit._id">
+          {{ habit.name }}
+        </option>
+      }
+    </select>
+
+    <button
+      (click)="planHabit()"
+      [disabled]="!selectedHabitId"
+    >
+      @if (getSelectedHabit()?.type === 'negative') {
+        Negatives Ereignis eintragen
+      } @else {
+        Habit planen
+      }
+    </button>
+  </div>
+}

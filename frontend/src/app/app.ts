@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HabitList } from './components/habit-list/habit-list';
+import { Calendar } from './components/calendar/calendar';
 
 @Component({
-  imports: [RouterOutlet, HabitList],
+  imports: [RouterOutlet, HabitList, Calendar],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',

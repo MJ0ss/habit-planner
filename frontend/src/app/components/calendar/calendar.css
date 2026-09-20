@@ -1,0 +1,20 @@
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.weekday {
+  font-weight: bold;
+  text-align: center;
+}
+
+.day {
+  min-height: 80px;
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.empty {
+  border: none;
+}

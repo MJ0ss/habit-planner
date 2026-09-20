@@ -14,7 +14,7 @@ import { Habit } from '../../models/habit';
 export class HabitList implements OnInit {
   private habitService = inject(HabitService);
 
-  habits = signal<Habit[]>([]);
+  habits = this.habitService.habits;
 
   newHabitName = '';
   newHabitType: 'positive' | 'negative' = 'positive';
@@ -26,9 +26,7 @@ export class HabitList implements OnInit {
   } 
 
   loadHabits() {
-    this.habitService.getHabits().subscribe((habits) => {
-      this.habits.set(habits);
-    });
+    this.habitService.loadHabits();
   }
 
   addHabit() {
