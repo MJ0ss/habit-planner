@@ -7,3 +7,18 @@
     </li>
   }
 </ul>
+
+<h3>Habit hinzufügen</h3>
+
+<input
+  type="text"
+  [(ngModel)]="newHabitName"
+  placeholder="Name des Habits"
+/>
+
+<select [(ngModel)]="newHabitType">
+  <option value="positive">Positiv</option>
+  <option value="negative">Negativ</option>
+</select>
+
+<button (click)="addHabit()">Habit hinzufügen</button>

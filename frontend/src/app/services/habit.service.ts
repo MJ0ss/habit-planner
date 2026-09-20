@@ -14,4 +14,8 @@ export class HabitService {
   getHabits() {
     return this.http.get<Habit[]>(this.apiUrl);
   }
+
+  addHabit(habit: Omit<Habit, '_id'>) {
+    return this.http.post<Habit>(this.apiUrl, habit);
+  }
 }
