@@ -1,4 +1,13 @@
-<h2>{{ monthName }}</h2>
+<div class="calendar-header">
+  <button (click)="previousMonth()">← vorheriger Monat</button>
+
+  <div>
+    <h2>{{ monthName }}</h2>
+    <button (click)="goToCurrentMonth()">Aktueller Monat</button>
+  </div>
+
+  <button (click)="nextMonth()">nächster Monat →</button>
+</div>
 
 <div class="calendar">
   @for (weekDay of weekDays; track weekDay) {
@@ -11,29 +20,31 @@
     <div class="day empty"></div>
   }
 
-    @for (day of daysInMonth; track day) {
-    <div class="day"
-        (click)="selectDay(day)"
-        >
-        <strong>{{ day }}</strong>
+  @for (day of daysInMonth; track day) {
+  <div class="day"
+      [class.today]="isToday(day)"
+      [class.selected]="selectedDay() === day"
+      (click)="selectDay(day)"
+    >
+      <strong>{{ day }}</strong>
 
-        @for (entry of getEntriesForDay(day); track entry._id) {
-          <div>
-            {{ getHabitName(entry.habitId) }} - {{ entry.status }}
+      @for (entry of getEntriesForDay(day); track entry._id) {
+        <div>
+          {{ getHabitName(entry.habitId) }} - {{ entry.status }}
 
-            @if (entry.status === 'planned') {
-              <button (click)="completeHabit(entry); $event.stopPropagation()">
-                Erledigt
-              </button>
+          @if (entry.status === 'planned') {
+            <button (click)="completeHabit(entry); $event.stopPropagation()">
+              Erledigt
+            </button>
 
-              <button (click)="missHabit(entry); $event.stopPropagation()">
-                Verpasst
-              </button>
-            }
-          </div>
-        }
-    </div>
-    }
+            <button (click)="missHabit(entry); $event.stopPropagation()">
+              Verpasst
+            </button>
+          }
+        </div>
+      }
+  </div>
+  }
 </div>
 
 @if (selectedDay()) {

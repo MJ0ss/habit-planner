@@ -4,6 +4,12 @@
   gap: 4px;
 }
 
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .weekday {
   font-weight: bold;
   text-align: center;
@@ -15,6 +21,15 @@
   padding: 8px;
 }
 
+.today {
+  font-weight: bold;
+  background-color: #e8f2ff;
+}
+
 .empty {
   border: none;
+}
+
+.selected {
+  outline: 3px solid #333;
 }

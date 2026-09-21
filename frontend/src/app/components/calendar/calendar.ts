@@ -149,4 +149,43 @@ export class Calendar implements OnInit {
       this.loadHabitEntries();
     });
   }
+
+  previousMonth() {
+    const date = this.currentDate();
+
+    this.currentDate.set(
+      new Date(date.getFullYear(), date.getMonth() - 1, 1)
+    );
+
+    this.selectedDay.set(null);
+    this.selectedHabitId = '';
+  }
+
+  nextMonth() {
+    const date = this.currentDate();
+
+    this.currentDate.set(
+      new Date(date.getFullYear(), date.getMonth() + 1, 1)
+    );
+
+    this.selectedDay.set(null);
+    this.selectedHabitId = '';
+  }
+
+  goToCurrentMonth() {
+    this.currentDate.set(new Date());
+    this.selectedDay.set(null);
+    this.selectedHabitId = '';
+  }
+
+  isToday(day: number) {
+    const today = new Date();
+    const current = this.currentDate();
+
+    return (
+      day === today.getDate() &&
+      current.getMonth() === today.getMonth() &&
+      current.getFullYear() === today.getFullYear()
+    );
+  }
 }
