@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+
 import { HabitEntry } from '../models/habit-entry';
 
 @Injectable({
@@ -8,7 +9,15 @@ import { HabitEntry } from '../models/habit-entry';
 export class HabitEntryService {
   private apiUrl = 'http://localhost:3000/api/habit-entries';
 
+  habitEntries = signal<HabitEntry[]>([]);
+
   constructor(private http: HttpClient) {}
+
+  loadHabitEntries() {
+    this.http.get<HabitEntry[]>(this.apiUrl).subscribe((habitEntries) => {
+      this.habitEntries.set(habitEntries);
+    });
+  }
 
   getHabitEntries() {
     return this.http.get<HabitEntry[]>(this.apiUrl);

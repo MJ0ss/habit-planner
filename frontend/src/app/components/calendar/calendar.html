@@ -41,6 +41,10 @@
               Verpasst
             </button>
           }
+
+          <button (click)="deleteHabitEntry(entry); $event.stopPropagation()">
+            Entfernen
+          </button>
         </div>
       }
   </div>

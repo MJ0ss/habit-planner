@@ -16,7 +16,7 @@ export class Calendar implements OnInit {
   private habitEntryService = inject(HabitEntryService);
   private habitService = inject(HabitService);
 
-  habitEntries = signal<HabitEntry[]>([]);
+  habitEntries = this.habitEntryService.habitEntries;
   habits = this.habitService.habits;
 
   currentDate = signal(new Date());
@@ -60,9 +60,7 @@ export class Calendar implements OnInit {
   }
 
   loadHabitEntries() {
-    this.habitEntryService.getHabitEntries().subscribe((habitEntries) => {
-      this.habitEntries.set(habitEntries);
-    });
+    this.habitEntryService.loadHabitEntries();
   }
 
   loadHabits() {
@@ -146,6 +144,12 @@ export class Calendar implements OnInit {
     this.habitEntryService.updateHabitEntry(entry._id, {
       status: 'missed'
     }).subscribe(() => {
+      this.loadHabitEntries();
+    });
+  }
+
+  deleteHabitEntry(entry: HabitEntry) {
+    this.habitEntryService.deleteHabitEntry(entry._id).subscribe(() => {
       this.loadHabitEntries();
     });
   }
