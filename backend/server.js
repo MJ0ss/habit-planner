@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const JWT_SECRET = 'habit-planner-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express();
 const port = 3000;
@@ -115,6 +117,12 @@ async function startServer() {
     app.get('/api/habits/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
 
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: 'Ungültige Habit-ID'
+            });
+        }
+
         const habit = await habits.findOne({
             _id: new ObjectId(id),
             userId: req.user.userId,
@@ -131,18 +139,43 @@ async function startServer() {
 
     app.put('/api/habits/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
-        const updatedHabit = req.body;
+        const { name, type, category } = req.body;
 
-        const result = await habits.updateOne({ 
-            _id: new ObjectId(id), 
-            userId: req.user.userId
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: 'Ungültige Habit-ID'
+            });
+        }
+
+        if (
+            !name ||
+            !category ||
+            !['positive', 'negative'].includes(type)
+        ) {
+            return res.status(400).json({
+                message: 'Ungültige Habit-Daten'
+            });
+        }
+
+        const updatedHabit = {
+            name: name.trim(),
+            type,
+            category,
+        };
+
+        const result = await habits.updateOne(
+            {
+                _id: new ObjectId(id),
+                userId: req.user.userId
             },
-            { $set: updatedHabit }
+            {
+                $set: updatedHabit
+            }
         );
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
-            message: 'Habit nicht gefunden'
+                message: 'Habit nicht gefunden'
             });
         }
 
@@ -156,6 +189,12 @@ async function startServer() {
 
     app.delete('/api/habits/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: 'Ungültige Habit-ID'
+            });
+        }
 
         const result = await habits.deleteOne({
             _id: new ObjectId(id),
@@ -177,8 +216,22 @@ async function startServer() {
     });
 
     app.post('/api/habits', authenticateToken, async (req, res) => {
+        const { name, type, category } = req.body;
+
+        if (
+            !name ||
+            !category ||
+            !['positive', 'negative'].includes(type)
+        ) {
+            return res.status(400).json({
+                message: 'Ungültige Habit-Daten'
+            });
+        }
+
         const habit = {
-            ...req.body,
+            name: name.trim(),
+            type,
+            category,
             userId: req.user.userId,
         };
 
@@ -191,10 +244,48 @@ async function startServer() {
     });
 
     app.post('/api/habit-entries', authenticateToken, async (req, res) => {
+        const { habitId, date, status } = req.body;
+
         const habitEntry = {
-            ...req.body,
+            habitId,
+            date,
+            status,
             userId: req.user.userId,
         };
+
+        const allowedStatuses = [
+            'planned',
+            'completed',
+            'missed',
+            'occurred'
+        ];
+
+        if (
+            !habitEntry.habitId ||
+            !habitEntry.date ||
+            !allowedStatuses.includes(habitEntry.status)
+        ) {
+            return res.status(400).json({
+                message: 'Ungültige HabitEntry-Daten'
+            });
+        }
+
+        if (!ObjectId.isValid(habitEntry.habitId)) {
+            return res.status(400).json({
+                message: 'Ungültige Habit-ID'
+            });
+        }
+
+        const habit = await habits.findOne({
+            _id: new ObjectId(habitEntry.habitId),
+            userId: req.user.userId
+        });
+
+        if (!habit) {
+            return res.status(404).json({
+                message: 'Habit nicht gefunden'
+            });
+        }
 
         const result = await habitEntries.insertOne(habitEntry);
 
@@ -213,13 +304,32 @@ async function startServer() {
 
     app.put('/api/habit-entries/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
-        const updatedEntry = req.body;
+        const { status } = req.body;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: 'Ungültige HabitEntry-ID'
+            });
+        }
+
+        const allowedStatuses = [
+            'planned',
+            'completed',
+            'missed',
+            'occurred'
+        ];
+
+        if (!allowedStatuses.includes(status)) {
+            return res.status(400).json({
+                message: 'Ungültiger Status'
+            });
+        }
 
         const result = await habitEntries.updateOne({
             _id: new ObjectId(id),
             userId: req.user.userId
         }, {
-            $set: updatedEntry
+            $set: { status }
         });
 
         if (result.matchedCount === 0) {
@@ -238,6 +348,12 @@ async function startServer() {
 
     app.delete('/api/habit-entries/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({
+                message: 'Ungültige HabitEntry-ID'
+            });
+        }
 
         const result = await habitEntries.deleteOne({
             _id: new ObjectId(id),

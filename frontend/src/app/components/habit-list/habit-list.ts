@@ -67,6 +67,7 @@ export class HabitList implements OnInit {
     this.editingHabitId = habit._id;
     this.newHabitName = habit.name;
     this.newHabitType = habit.type;
+    this.newHabitCategory = habit.category;
   }
 
   saveHabit() {
