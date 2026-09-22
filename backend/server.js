@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ObjectId } = require('mongodb');
+
+const JWT_SECRET = 'habit-planner-secret';
 
 const app = express();
 const port = 3000;
@@ -22,18 +26,98 @@ async function startServer() {
     const habits = db.collection('habits');
     const habitEntries = db.collection('habitEntries');
 
+    const users = db.collection('users');
+
     console.log('Mit MongoDB verbunden');
 
-    app.get('/api/habits', async (req, res) => {
-      const result = await habits.find().toArray();
+    app.post('/api/register', async (req, res) => {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({
+            message: 'Benutzername und Passwort sind erforderlich',
+            });
+        }
+
+        const existingUser = await users.findOne({ username });
+
+        if (existingUser) {
+            return res.status(409).json({
+            message: 'Benutzername ist bereits vergeben',
+            });
+        }
+
+        const passwordHash = await bcrypt.hash(password, 10);
+
+        const user = {
+            username,
+            passwordHash,
+        };
+
+        const result = await users.insertOne(user);
+
+        res.status(201).json({
+            _id: result.insertedId,
+            username,
+        });
+    });
+
+    app.post('/api/login', async (req, res) => {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({
+            message: 'Benutzername und Passwort sind erforderlich',
+            });
+        }
+
+        const user = await users.findOne({ username });
+
+        if (!user) {
+            return res.status(401).json({
+            message: 'Benutzername oder Passwort ist falsch',
+            });
+        }
+
+        const passwordIsCorrect = await bcrypt.compare(
+            password,
+            user.passwordHash
+        );
+
+        if (!passwordIsCorrect) {
+            return res.status(401).json({
+            message: 'Benutzername oder Passwort ist falsch',
+            });
+        }
+
+        const token = jwt.sign(
+            {
+            userId: user._id.toString(),
+            username: user.username,
+            },
+            JWT_SECRET,
+            {
+            expiresIn: '1h',
+            }
+        );
+
+        res.status(200).json({
+            token,
+            username: user.username,
+        });
+        });
+
+    app.get('/api/habits', authenticateToken, async (req, res) => {
+      const result = await habits.find({ userId: req.user.userId }).toArray();
       res.json(result);
     });
 
-    app.get('/api/habits/:id', async (req, res) => {
+    app.get('/api/habits/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
 
         const habit = await habits.findOne({
-            _id: new ObjectId(id)
+            _id: new ObjectId(id),
+            userId: req.user.userId,
         });
 
         if (!habit) {
@@ -45,12 +129,14 @@ async function startServer() {
         res.json(habit);
     });
 
-    app.put('/api/habits/:id', async (req, res) => {
+    app.put('/api/habits/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
         const updatedHabit = req.body;
 
-        const result = await habits.updateOne(
-            { _id: new ObjectId(id) },
+        const result = await habits.updateOne({ 
+            _id: new ObjectId(id), 
+            userId: req.user.userId
+            },
             { $set: updatedHabit }
         );
 
@@ -61,17 +147,19 @@ async function startServer() {
         }
 
         const habit = await habits.findOne({
-            _id: new ObjectId(id)
+            _id: new ObjectId(id),
+            userId: req.user.userId,
         });
 
         res.json(habit);
     });
 
-    app.delete('/api/habits/:id', async (req, res) => {
+    app.delete('/api/habits/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
 
         const result = await habits.deleteOne({
-            _id: new ObjectId(id)
+            _id: new ObjectId(id),
+            userId: req.user.userId
         });
 
         if (result.deletedCount === 0) {
@@ -83,8 +171,11 @@ async function startServer() {
         res.status(204).send();
     });
 
-    app.post('/api/habits', async (req, res) => {
-        const habit = req.body;
+    app.post('/api/habits', authenticateToken, async (req, res) => {
+        const habit = {
+            ...req.body,
+            userId: req.user.userId,
+        };
 
         const result = await habits.insertOne(habit);
 
@@ -94,8 +185,11 @@ async function startServer() {
         });
     });
 
-    app.post('/api/habit-entries', async (req, res) => {
-        const habitEntry = req.body;
+    app.post('/api/habit-entries', authenticateToken, async (req, res) => {
+        const habitEntry = {
+            ...req.body,
+            userId: req.user.userId,
+        };
 
         const result = await habitEntries.insertOne(habitEntry);
 
@@ -105,19 +199,23 @@ async function startServer() {
         });
     });
 
-    app.get('/api/habit-entries', async (req, res) => {
-        const result = await habitEntries.find().toArray();
+    app.get('/api/habit-entries', authenticateToken, async (req, res) => {
+        const result = await habitEntries
+            .find({ userId: req.user.userId })
+            .toArray();
         res.json(result);
     });
 
-    app.put('/api/habit-entries/:id', async (req, res) => {
+    app.put('/api/habit-entries/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
         const updatedEntry = req.body;
 
-        const result = await habitEntries.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: updatedEntry }
-        );
+        const result = await habitEntries.updateOne({
+            _id: new ObjectId(id),
+            userId: req.user.userId
+        }, {
+            $set: updatedEntry
+        });
 
         if (result.matchedCount === 0) {
             return res.status(404).json({
@@ -126,17 +224,19 @@ async function startServer() {
         }
 
         const habitEntry = await habitEntries.findOne({
-            _id: new ObjectId(id)
+            _id: new ObjectId(id),
+            userId: req.user.userId
         });
 
         res.json(habitEntry);
     });
 
-    app.delete('/api/habit-entries/:id', async (req, res) => {
+    app.delete('/api/habit-entries/:id', authenticateToken, async (req, res) => {
         const id = req.params.id;
 
         const result = await habitEntries.deleteOne({
-            _id: new ObjectId(id)
+            _id: new ObjectId(id),
+            userId: req.user.userId
         });
 
         if (result.deletedCount === 0) {
@@ -153,6 +253,27 @@ async function startServer() {
     });
   } catch (error) {
     console.error('Fehler beim Starten des Servers:', error);
+  }
+}
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({
+      message: 'Nicht angemeldet',
+    });
+  }
+
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    req.user = user;
+    next();
+  } catch {
+    return res.status(403).json({
+      message: 'Ungültiger oder abgelaufener Token',
+    });
   }
 }
 

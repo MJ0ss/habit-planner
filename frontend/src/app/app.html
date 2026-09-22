@@ -1,9 +1,11 @@
 <h1>Habit Planner</h1>
 
-<app-habit-list></app-habit-list>
+<app-auth></app-auth>
 
-<app-calendar></app-calendar>
-
-<app-statistics></app-statistics>
+@if (auth.isLoggedIn()) {
+  <app-habit-list></app-habit-list>
+  <app-calendar></app-calendar>
+  <app-statistics></app-statistics>
+}
 
 <router-outlet></router-outlet>
