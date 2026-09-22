@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { HabitEntryService } from '../../services/habit-entry.service';
 import { HabitService } from '../../services/habit.service';
 import { Habit } from '../../models/habit';
 
@@ -12,6 +13,7 @@ import { Habit } from '../../models/habit';
 })
 
 export class HabitList implements OnInit {
+  private habitEntryService = inject(HabitEntryService);
   private habitService = inject(HabitService);
 
   habits = this.habitService.habits;
@@ -89,6 +91,7 @@ export class HabitList implements OnInit {
   deleteHabit(id: string) {
     this.habitService.deleteHabit(id).subscribe(() => {
       this.loadHabits();
+      this.habitEntryService.loadHabitEntries();
     });
   }
 }

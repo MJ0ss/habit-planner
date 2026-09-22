@@ -164,9 +164,14 @@ async function startServer() {
 
         if (result.deletedCount === 0) {
             return res.status(404).json({
-            message: 'Habit nicht gefunden'
+                message: 'Habit nicht gefunden'
             });
         }
+
+        await habitEntries.deleteMany({
+            habitId: id,
+            userId: req.user.userId
+        });
 
         res.status(204).send();
     });
