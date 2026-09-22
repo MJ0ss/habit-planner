@@ -18,8 +18,22 @@ export class HabitList implements OnInit {
 
   newHabitName = '';
   newHabitType: 'positive' | 'negative' = 'positive';
+  newHabitCategory = '';
 
   editingHabitId: string | null = null;
+
+  categories = [
+    'Sport',
+    'Gesundheit',
+    'Ernährung',
+    'Lernen',
+    'Produktivität',
+    'Freizeit',
+    'Schlaf',
+    'Social Media',
+    'Konsum',
+    'Sonstiges'
+  ];
 
   ngOnInit() {
     this.loadHabits();
@@ -36,10 +50,12 @@ export class HabitList implements OnInit {
 
     this.habitService.addHabit({
       name: this.newHabitName,
-      type: this.newHabitType
+      type: this.newHabitType,
+      category: this.newHabitCategory
     }).subscribe(() => {
       this.newHabitName = '';
       this.newHabitType = 'positive';
+      this.newHabitCategory = '';
 
       this.loadHabits();
     })
@@ -58,11 +74,13 @@ export class HabitList implements OnInit {
 
     this.habitService.updateHabit(this.editingHabitId, {
       name: this.newHabitName,
-      type: this.newHabitType
+      type: this.newHabitType,
+      category: this.newHabitCategory
     }).subscribe(() => {
       this.editingHabitId = null;
       this.newHabitName = '';
       this.newHabitType = 'positive';
+      this.newHabitCategory = '';
 
       this.loadHabits();
     });

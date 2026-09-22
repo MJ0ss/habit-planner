@@ -93,6 +93,34 @@ export class Statistics implements OnInit {
     );
   }
 
+  getCategoryCount(category: string) {
+    const habitIds = this.habits()
+      .filter((habit) => habit.category === category)
+      .map((habit) => habit._id);
+
+    return this.habitEntries().filter(
+      (entry) =>
+        habitIds.includes(entry.habitId) &&
+        (
+          entry.status === 'completed' ||
+          entry.status === 'missed' ||
+          entry.status === 'occurred'
+        )
+    ).length;
+  }
+
+  getTrackedCategories() {
+    const categories = this.habits()
+      .map((habit) => habit.category)
+      .filter((category) => category);
+
+    const uniqueCategories = [...new Set(categories)];
+
+    return uniqueCategories.filter(
+      (category) => this.getCategoryCount(category) > 0
+    );
+  }
+
   hasPositiveHabitEntries() {
     return this.habits().some(
       (habit) =>

@@ -3,7 +3,7 @@
 <ul>
   @for (habit of habits(); track habit._id) {
     <li>
-      {{ habit.name }} - {{ habit.type }}
+      {{ habit.name }} - {{ habit.type }} - Kategorie: {{ habit.category }}
 
       <button (click)="editHabit(habit)">Bearbeiten</button>
       <button (click)="deleteHabit(habit._id)">Löschen</button>
@@ -19,6 +19,16 @@
   placeholder="Name des Habits"
 />
 
+<select [(ngModel)]="newHabitCategory">
+  <option value="">Kategorie auswählen</option>
+
+  @for (category of categories; track category) {
+    <option [value]="category">
+      {{ category }}
+    </option>
+  }
+</select>
+
 <select [(ngModel)]="newHabitType">
   <option value="positive">Positiv</option>
   <option value="negative">Negativ</option>
@@ -27,5 +37,10 @@
 @if (editingHabitId) {
   <button (click)="saveHabit()">Änderungen speichern</button>
 } @else {
-  <button (click)="addHabit()">Habit hinzufügen</button>
+  <button
+    (click)="addHabit()"
+    [disabled]="!newHabitName || !newHabitCategory"
+  >
+    Habit hinzufügen
+  </button>
 }

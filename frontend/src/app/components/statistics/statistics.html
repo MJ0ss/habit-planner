@@ -5,6 +5,16 @@
   <p>{{ getOverallSuccessRate() }} %</p>
 </div>
 
+@if (getTrackedCategories().length > 0) {
+  <h3>Kategorie-Statistik</h3>
+
+  @for (category of getTrackedCategories(); track category) {
+    <div>
+      {{ category }}: {{ getCategoryCount(category) }}
+    </div>
+  }
+}
+
 @if (hasPositiveHabitEntries()) {
   <h3>Positive Habits</h3>
 
