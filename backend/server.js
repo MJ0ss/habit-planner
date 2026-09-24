@@ -5,7 +5,8 @@ const { createApp } = require('./app');
 
 const port = 3000;
 
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017';
+
 const client = new MongoClient(mongoUrl);
 
 async function startServer() {

@@ -7,5 +7,26 @@ services:
     volumes:
       - mongodb_data:/data/db
 
+  backend:
+    build:
+      context: ./backend
+    container_name: habit-planner-backend
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URL: mongodb://mongodb:27017
+      JWT_SECRET: habit-planner-docker-secret
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: habit-planner-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
 volumes:
   mongodb_data:
