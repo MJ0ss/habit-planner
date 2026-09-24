@@ -1,46 +1,91 @@
-<h2>Meine Habits</h2>
+<section class="card">
+  <div class="section-header">
+    <div>
+      <h2>Meine Habits</h2>
+      <p>Verwalte deine positiven und negativen Gewohnheiten.</p>
+    </div>
+  </div>
 
-<ul>
-  @for (habit of habits(); track habit._id) {
-    <li>
-      {{ habit.name }} - {{ habit.type }} - Kategorie: {{ habit.category }}
+  @if (habits().length > 0) {
+    <div class="habit-list">
+      @for (habit of habits(); track habit._id) {
+        <div class="habit-item">
+          <div class="habit-info">
+            <strong>{{ habit.name }}</strong>
 
-      <button (click)="editHabit(habit)">Bearbeiten</button>
-      <button (click)="deleteHabit(habit._id)">Löschen</button>
-    </li>
+            <span class="category">
+              {{ habit.category }}
+            </span>
+
+            <span
+              class="habit-type"
+              [class.positive]="habit.type === 'positive'"
+              [class.negative]="habit.type === 'negative'"
+            >
+              {{ habit.type === 'positive' ? 'Positiv' : 'Negativ' }}
+            </span>
+          </div>
+
+          <div class="habit-actions">
+            <button (click)="editHabit(habit)">
+              Bearbeiten
+            </button>
+
+            <button
+              class="danger-button"
+              (click)="deleteHabit(habit._id)"
+            >
+              Löschen
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="empty-message">
+      Noch keine Habits vorhanden.
+    </p>
   }
-</ul>
 
-<h3>Habit hinzufügen</h3>
+  <div class="add-habit">
+    <h3>
+      {{ editingHabitId ? 'Habit bearbeiten' : 'Habit hinzufügen' }}
+    </h3>
 
-<input
-  type="text"
-  [(ngModel)]="newHabitName"
-  placeholder="Name des Habits"
-/>
+    <div class="habit-form">
+      <input
+        type="text"
+        [(ngModel)]="newHabitName"
+        placeholder="Name des Habits"
+      />
 
-<select [(ngModel)]="newHabitCategory">
-  <option value="">Kategorie auswählen</option>
+      <select [(ngModel)]="newHabitCategory">
+        <option value="">Kategorie auswählen</option>
 
-  @for (category of categories; track category) {
-    <option [value]="category">
-      {{ category }}
-    </option>
-  }
-</select>
+        @for (category of categories; track category) {
+          <option [value]="category">
+            {{ category }}
+          </option>
+        }
+      </select>
 
-<select [(ngModel)]="newHabitType">
-  <option value="positive">Positiv</option>
-  <option value="negative">Negativ</option>
-</select>
+      <select [(ngModel)]="newHabitType">
+        <option value="positive">Positiv</option>
+        <option value="negative">Negativ</option>
+      </select>
 
-@if (editingHabitId) {
-  <button (click)="saveHabit()">Änderungen speichern</button>
-} @else {
-  <button
-    (click)="addHabit()"
-    [disabled]="!newHabitName || !newHabitCategory"
-  >
-    Habit hinzufügen
-  </button>
-}
+      @if (editingHabitId) {
+        <button (click)="saveHabit()">
+          Änderungen speichern
+        </button>
+      } @else {
+        <button
+          (click)="addHabit()"
+          [disabled]="!newHabitName || !newHabitCategory"
+        >
+          Habit hinzufügen
+        </button>
+      }
+    </div>
+  </div>
+</section>

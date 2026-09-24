@@ -42,11 +42,11 @@ describe('Habit Planner', () => {
 
     cy.contains('button', 'Habit hinzufügen').click();
 
-    cy.contains('li', 'Joggen')
-      .should('contain', 'positive')
+    cy.contains('.habit-item', 'Joggen')
+      .should('contain', 'Positiv')
       .and('contain', 'Sport');
 
-    cy.contains('li', 'Joggen')
+    cy.contains('.habit-item', 'Joggen')
       .contains('button', 'Bearbeiten')
       .click();
 
@@ -56,14 +56,14 @@ describe('Habit Planner', () => {
 
     cy.contains('button', 'Änderungen speichern').click();
 
-    cy.contains('li', 'Laufen').should('be.visible');
-    cy.contains('li', 'Joggen').should('not.exist');
+    cy.contains('.habit-item', 'Laufen').should('be.visible');
+    cy.contains('.habit-item', 'Joggen').should('not.exist');
 
-    cy.contains('li', 'Laufen')
+    cy.contains('.habit-item', 'Laufen')
       .contains('button', 'Löschen')
       .click();
 
-    cy.contains('li', 'Laufen').should('not.exist');
+    cy.contains('.habit-item', 'Laufen').should('not.exist');
   });
 
   it('plans and completes a positive habit', () => {
@@ -94,8 +94,7 @@ describe('Habit Planner', () => {
 
     cy.contains('Ausgewählter Tag: 15.').should('be.visible');
 
-    cy.contains('h3', 'Habit planen')
-      .parent()
+    cy.get('.planning-section')
       .find('select')
       .select('Joggen');
 
@@ -105,7 +104,7 @@ describe('Habit Planner', () => {
       .not('.empty')
       .contains('strong', '15')
       .parent()
-      .should('contain', 'Joggen - planned');
+      .should('contain', 'Joggen - Geplant');
 
     cy.get('.day')
       .not('.empty')
@@ -118,7 +117,7 @@ describe('Habit Planner', () => {
       .not('.empty')
       .contains('strong', '15')
       .parent()
-      .should('contain', 'Joggen - completed');
+      .should('contain', 'Joggen - Erledigt');
   });
 
   it('tracks a negative habit and shows it in statistics', () => {
@@ -142,8 +141,8 @@ describe('Habit Planner', () => {
     cy.get('select').eq(1).select('negative');
     cy.contains('button', 'Habit hinzufügen').click();
 
-    cy.contains('li', 'Fast Food')
-      .should('contain', 'negative')
+    cy.contains('.habit-item', 'Fast Food')
+      .should('contain', 'Negativ')
       .and('contain', 'Ernährung');
 
     cy.get('.day')
@@ -151,8 +150,7 @@ describe('Habit Planner', () => {
       .contains('strong', '15')
       .click();
 
-    cy.contains('h3', 'Habit planen')
-      .parent()
+    cy.get('.planning-section')
       .find('select')
       .select('Fast Food');
 
@@ -162,12 +160,13 @@ describe('Habit Planner', () => {
       .not('.empty')
       .contains('strong', '15')
       .parent()
-      .should('contain', 'Fast Food - occurred');
+      .should('contain', 'Fast Food - Eingetreten');
 
     cy.contains('h3', 'Negative Habits').should('be.visible');
 
     cy.contains('h4', 'Fast Food')
       .parent()
-      .should('contain', 'Vorkommnisse: 1');
+      .should('contain', 'Vorkommnisse')
+      .and('contain', '1');
   });
 });

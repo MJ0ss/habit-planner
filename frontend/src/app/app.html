@@ -1,11 +1,18 @@
-<h1>Habit Planner</h1>
+<div class="app-container">
+  <header class="app-header">
+    <h1>Habit Planner</h1>
+    <p>Plane deine Gewohnheiten und behalte deinen Fortschritt im Blick.</p>
+  </header>
 
-<app-auth></app-auth>
+  <main>
+    <app-auth></app-auth>
 
-@if (auth.isLoggedIn()) {
-  <app-habit-list></app-habit-list>
-  <app-calendar></app-calendar>
-  <app-statistics></app-statistics>
-}
+    @if (auth.isLoggedIn()) {
+      <app-statistics></app-statistics>
+      <app-calendar></app-calendar>
+      <app-habit-list></app-habit-list>
+    }
+  </main>
+</div>
 
 <router-outlet></router-outlet>

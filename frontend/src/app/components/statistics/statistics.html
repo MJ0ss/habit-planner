@@ -1,58 +1,111 @@
-<h2>Statistik</h2>
+<section class="card">
+  <div class="section-header">
+    <h2>Statistik</h2>
+    <p>Übersicht über deine bisherigen Habit-Einträge.</p>
+  </div>
 
-<div>
-  <h3>Gesamterfolgsrate</h3>
-  <p>{{ getOverallSuccessRate() }} %</p>
-</div>
+  <div
+    class="overall-stat"
+    [class.low]="getOverallSuccessRate() < 50"
+    [class.medium]="
+      getOverallSuccessRate() >= 50 &&
+      getOverallSuccessRate() < 75
+    "
+    [class.high]="getOverallSuccessRate() >= 75"
+  >
+    <span>Gesamterfolgsrate</span>
+    <strong>{{ getOverallSuccessRate() }} %</strong>
+  </div>
 
-@if (getTrackedCategories().length > 0) {
-  <h3>Kategorie-Statistik</h3>
+  @if (getTrackedCategories().length > 0) {
+    <div class="statistics-section">
+      <h3>Kategorien</h3>
 
-  @for (category of getTrackedCategories(); track category) {
-    <div>
-      {{ category }}: {{ getCategoryCount(category) }}
-    </div>
-  }
-}
-
-@if (hasPositiveHabitEntries()) {
-  <h3>Positive Habits</h3>
-
-  @for (habit of habits(); track habit._id) {
-    @if (
-      habit.type === 'positive' &&
-      (
-        getPlannedCount(habit) > 0 ||
-        getCompletedCount(habit) > 0 ||
-        getMissedCount(habit) > 0
-      )
-    ) {
-      <div>
-        <h4>{{ habit.name }}</h4>
-
-        <p>Geplant: {{ getPlannedCount(habit) }}</p>
-        <p>Erledigt: {{ getCompletedCount(habit) }}</p>
-        <p>Verpasst: {{ getMissedCount(habit) }}</p>
-
-        @if (getCompletedCount(habit) + getMissedCount(habit) > 0) {
-          <p>Erfolgsrate: {{ getSuccessRate(habit) }} %</p>
-        } @else {
-          <p>Erfolgsrate: noch keine Wertung</p>
+      <div class="category-grid">
+        @for (category of getTrackedCategories(); track category) {
+          <div class="category-stat">
+            <span>{{ category }}</span>
+            <strong>{{ getCategoryCount(category) }}</strong>
+          </div>
         }
       </div>
-    }
+    </div>
   }
-}
 
-@if (hasOccurredNegativeHabits()) {
-  <h3>Negative Habits</h3>
+  @if (hasPositiveHabitEntries()) {
+    <div class="statistics-section">
+      <h3>Positive Habits</h3>
 
-  @for (habit of habits(); track habit._id) {
-    @if (habit.type === 'negative' && getOccurredCount(habit) > 0) {
-      <div>
-        <h4>{{ habit.name }}</h4>
-        <p>Vorkommnisse: {{ getOccurredCount(habit) }}</p>
+      <div class="habit-stat-grid">
+        @for (habit of habits(); track habit._id) {
+          @if (
+            habit.type === 'positive' &&
+            (
+              getPlannedCount(habit) > 0 ||
+              getCompletedCount(habit) > 0 ||
+              getMissedCount(habit) > 0
+            )
+          ) {
+            <div class="habit-stat">
+              <h4>{{ habit.name }}</h4>
+
+              <div class="stat-row">
+                <span>Geplant</span>
+                <strong>{{ getPlannedCount(habit) }}</strong>
+              </div>
+
+              <div class="stat-row completed">
+                <span>Erledigt</span>
+                <strong>{{ getCompletedCount(habit) }}</strong>
+              </div>
+
+              <div class="stat-row missed">
+                <span>Verpasst</span>
+                <strong>{{ getMissedCount(habit) }}</strong>
+              </div>
+
+              @if (
+                getCompletedCount(habit) +
+                getMissedCount(habit) > 0
+              ) {
+                <div class="success-rate">
+                  Erfolgsrate:
+                  <strong>{{ getSuccessRate(habit) }} %</strong>
+                </div>
+              } @else {
+                <div class="success-rate">
+                  Erfolgsrate:
+                  <strong>noch keine Wertung</strong>
+                </div>
+              }
+            </div>
+          }
+        }
       </div>
-    }
+    </div>
   }
-}
+
+  @if (hasOccurredNegativeHabits()) {
+    <div class="statistics-section">
+      <h3>Negative Habits</h3>
+
+      <div class="habit-stat-grid">
+        @for (habit of habits(); track habit._id) {
+          @if (
+            habit.type === 'negative' &&
+            getOccurredCount(habit) > 0
+          ) {
+            <div class="habit-stat negative-stat">
+              <h4>{{ habit.name }}</h4>
+
+              <div class="stat-row missed">
+                <span>Vorkommnisse</span>
+                <strong>{{ getOccurredCount(habit) }}</strong>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+</section>

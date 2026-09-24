@@ -1,83 +1,117 @@
-<div class="calendar-header">
-  <button (click)="previousMonth()">← vorheriger Monat</button>
+<section class="card">
+  <div class="calendar-header">
+    <button class="navigation-button" (click)="previousMonth()">
+      ← vorheriger Monat
+    </button>
 
-  <div>
-    <h2>{{ monthName }}</h2>
-    <button (click)="goToCurrentMonth()">Aktueller Monat</button>
-  </div>
-
-  <button (click)="nextMonth()">nächster Monat →</button>
-</div>
-
-<div class="calendar">
-  @for (weekDay of weekDays; track weekDay) {
-    <div class="weekday">
-      {{ weekDay }}
+    <div class="month-title">
+      <h2>{{ monthName }}</h2>
+      <button class="current-month-button secondary-button" (click)="goToCurrentMonth()">
+        Aktueller Monat
+      </button>
     </div>
-  }
 
-  @for (empty of [].constructor(firstDayOffset); track $index) {
-    <div class="day empty"></div>
-  }
-
-  @for (day of daysInMonth; track day) {
-  <div class="day"
-      [class.today]="isToday(day)"
-      [class.selected]="selectedDay() === day"
-      (click)="selectDay(day)"
-    >
-      <strong>{{ day }}</strong>
-
-      @for (entry of getEntriesForDay(day); track entry._id) {
-        <div>
-          {{ getHabitName(entry.habitId) }} - {{ entry.status }}
-
-          @if (entry.status === 'planned') {
-            <button (click)="completeHabit(entry); $event.stopPropagation()">
-              Erledigt
-            </button>
-
-            <button (click)="missHabit(entry); $event.stopPropagation()">
-              Verpasst
-            </button>
-          }
-
-          <button (click)="deleteHabitEntry(entry); $event.stopPropagation()">
-            Entfernen
-          </button>
-        </div>
-      }
-  </div>
-  }
-</div>
-
-@if (selectedDay()) {
-  <div>
-    <h3>Habit planen</h3>
-
-    <p>
-      Ausgewählter Tag: {{ selectedDay() }}. {{ monthName }}
-    </p>
-
-    <select [(ngModel)]="selectedHabitId">
-      <option value="">Habit auswählen</option>
-
-      @for (habit of habits(); track habit._id) {
-        <option [value]="habit._id">
-          {{ habit.name }}
-        </option>
-      }
-    </select>
-
-    <button
-      (click)="planHabit()"
-      [disabled]="!selectedHabitId"
-    >
-      @if (getSelectedHabit()?.type === 'negative') {
-        Negatives Ereignis eintragen
-      } @else {
-        Habit planen
-      }
+    <button class="navigation-button" (click)="nextMonth()">
+      nächster Monat →
     </button>
   </div>
-}
+
+  <div class="calendar">
+    @for (weekDay of weekDays; track weekDay) {
+      <div class="weekday">
+        {{ weekDay }}
+      </div>
+    }
+
+    @for (empty of [].constructor(firstDayOffset); track $index) {
+      <div class="day empty"></div>
+    }
+
+    @for (day of daysInMonth; track day) {
+      <div
+        class="day"
+        [class.today]="isToday(day)"
+        [class.selected]="selectedDay() === day"
+        (click)="selectDay(day)"
+      >
+        <strong class="day-number">{{ day }}</strong>
+
+        <div class="day-entries">
+          @for (entry of getEntriesForDay(day); track entry._id) {
+            <div
+              class="calendar-entry"
+              [class.completed]="entry.status === 'completed'"
+              [class.missed]="entry.status === 'missed'"
+              [class.occurred]="entry.status === 'occurred'"
+              [class.planned]="entry.status === 'planned'"
+            >
+              <span>
+                {{ getHabitName(entry.habitId) }} - {{ getStatusLabel(entry.status) }}
+              </span>
+
+              @if (entry.status === 'planned') {
+                <div class="entry-actions">
+                  <button
+                    class="entry-button"
+                    (click)="completeHabit(entry); $event.stopPropagation()"
+                  >
+                    Erledigt
+                  </button>
+
+                  <button
+                    class="entry-button missed-button"
+                    (click)="missHabit(entry); $event.stopPropagation()"
+                  >
+                    Verpasst
+                  </button>
+                </div>
+              }
+
+              <button
+                class="remove-button"
+                (click)="deleteHabitEntry(entry); $event.stopPropagation()"
+              >
+                Entfernen
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (selectedDay()) {
+    <div class="planning-section">
+      <div>
+        <h3>Habit planen</h3>
+        <p>
+          Ausgewählter Tag:
+          <strong>{{ selectedDay() }}. {{ monthName }}</strong>
+        </p>
+      </div>
+
+      <div class="planning-form">
+        <select [(ngModel)]="selectedHabitId">
+          <option value="">Habit auswählen</option>
+
+          @for (habit of habits(); track habit._id) {
+            <option [value]="habit._id">
+              {{ habit.name }}
+            </option>
+          }
+        </select>
+
+        <button
+          (click)="planHabit()"
+          [disabled]="!selectedHabitId"
+        >
+          @if (getSelectedHabit()?.type === 'negative') {
+            Negatives Ereignis eintragen
+          } @else {
+            Habit planen
+          }
+        </button>
+      </div>
+    </div>
+  }
+</section>

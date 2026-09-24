@@ -192,4 +192,15 @@ export class Calendar implements OnInit {
       current.getFullYear() === today.getFullYear()
     );
   }
+
+  getStatusLabel(status: string): string {
+    const labels: Record<string, string> = {
+      planned: 'Geplant',
+      completed: 'Erledigt',
+      missed: 'Verpasst',
+      occurred: 'Eingetreten',
+    };
+
+    return labels[status] ?? status;
+  } 
 }
