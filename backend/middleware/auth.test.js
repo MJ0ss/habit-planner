@@ -1,10 +1,10 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const jwt = require('jsonwebtoken');
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const jwt = require("jsonwebtoken");
 
-const { authenticateToken } = require('./auth');
+const { authenticateToken } = require("./auth");
 
 function createResponse() {
   return {
@@ -23,7 +23,7 @@ function createResponse() {
   };
 }
 
-test('returns 401 when no token is provided', () => {
+test("returns 401 when no token is provided", () => {
   const req = {
     headers: {},
   };
@@ -38,14 +38,14 @@ test('returns 401 when no token is provided', () => {
   authenticateToken(req, res, next);
 
   assert.equal(res.statusCode, 401);
-  assert.equal(res.body.message, 'Nicht angemeldet');
+  assert.equal(res.body.message, "Nicht angemeldet");
   assert.equal(nextCalled, false);
 });
 
-test('returns 403 when token is invalid', () => {
+test("returns 403 when token is invalid", () => {
   const req = {
     headers: {
-      authorization: 'Bearer invalid-token',
+      authorization: "Bearer invalid-token",
     },
   };
 
@@ -59,20 +59,17 @@ test('returns 403 when token is invalid', () => {
   authenticateToken(req, res, next);
 
   assert.equal(res.statusCode, 403);
-  assert.equal(
-    res.body.message,
-    'Ungültiger oder abgelaufener Token'
-  );
+  assert.equal(res.body.message, "Ungültiger oder abgelaufener Token");
   assert.equal(nextCalled, false);
 });
 
-test('calls next and sets req.user when token is valid', () => {
+test("calls next and sets req.user when token is valid", () => {
   const token = jwt.sign(
     {
-      userId: '123',
-      username: 'testuser',
+      userId: "123",
+      username: "testuser",
     },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
   );
 
   const req = {
@@ -91,6 +88,6 @@ test('calls next and sets req.user when token is valid', () => {
   authenticateToken(req, res, next);
 
   assert.equal(nextCalled, true);
-  assert.equal(req.user.userId, '123');
-  assert.equal(req.user.username, 'testuser');
+  assert.equal(req.user.userId, "123");
+  assert.equal(req.user.username, "testuser");
 });

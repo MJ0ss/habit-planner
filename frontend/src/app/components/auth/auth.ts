@@ -23,8 +23,7 @@ export class Auth {
         this.message = 'Registrierung erfolgreich';
       },
       error: (error) => {
-        this.message =
-          error.error?.message ?? 'Registrierung fehlgeschlagen';
+        this.message = error.error?.message ?? 'Registrierung fehlgeschlagen';
       },
     });
   }
@@ -32,17 +31,13 @@ export class Auth {
   login() {
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
-        this.authService.setSession(
-          response.token,
-          response.username
-        );
+        this.authService.setSession(response.token, response.username);
 
         this.message = `Willkommen ${response.username}`;
         this.password = '';
       },
       error: (error) => {
-        this.message =
-          error.error?.message ?? 'Login fehlgeschlagen';
+        this.message = error.error?.message ?? 'Login fehlgeschlagen';
       },
     });
   }

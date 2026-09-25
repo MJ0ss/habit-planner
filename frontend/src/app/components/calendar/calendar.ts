@@ -32,7 +32,7 @@ export class Calendar implements OnInit {
   get monthName() {
     return this.currentDate().toLocaleDateString('de-CH', {
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
   }
 
@@ -50,11 +50,7 @@ export class Calendar implements OnInit {
   get firstDayOffset() {
     const date = this.currentDate();
 
-    const firstDay = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      1
-    ).getDay();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 
     return (firstDay + 6) % 7;
   }
@@ -76,28 +72,22 @@ export class Calendar implements OnInit {
 
     const dateString = `${year}-${month}-${dayString}`;
 
-    return this.habitEntries().filter(
-      (entry) => entry.date === dateString
-    );
+    return this.habitEntries().filter((entry) => entry.date === dateString);
   }
 
   getHabitName(habitId: string) {
-      const habit = this.habits().find(
-        (habit) => habit._id === habitId
-      );
+    const habit = this.habits().find((habit) => habit._id === habitId);
 
-      return habit?.name ?? 'Unbekannter Habit';
-    }
+    return habit?.name ?? 'Unbekannter Habit';
+  }
 
-    selectDay(day: number) {
-      this.selectedDay.set(day);
-    }
+  selectDay(day: number) {
+    this.selectedDay.set(day);
+  }
 
   getSelectedHabit() {
-    return this.habits().find(
-      (habit) => habit._id === this.selectedHabitId
-    );
-  }  
+    return this.habits().find((habit) => habit._id === this.selectedHabitId);
+  }
 
   planHabit() {
     const day = this.selectedDay();
@@ -106,9 +96,7 @@ export class Calendar implements OnInit {
       return;
     }
 
-    const habit = this.habits().find(
-      (habit) => habit._id === this.selectedHabitId
-    );
+    const habit = this.habits().find((habit) => habit._id === this.selectedHabitId);
 
     if (!habit) {
       return;
@@ -122,30 +110,36 @@ export class Calendar implements OnInit {
 
     const dateString = `${year}-${month}-${dayString}`;
 
-    this.habitEntryService.addHabitEntry({
-      habitId: this.selectedHabitId,
-      date: dateString,
-      status: habit.type === 'positive' ? 'planned' : 'occurred'
-    }).subscribe(() => {
-      this.selectedHabitId = '';
-      this.loadHabitEntries();
-    });
+    this.habitEntryService
+      .addHabitEntry({
+        habitId: this.selectedHabitId,
+        date: dateString,
+        status: habit.type === 'positive' ? 'planned' : 'occurred',
+      })
+      .subscribe(() => {
+        this.selectedHabitId = '';
+        this.loadHabitEntries();
+      });
   }
 
   completeHabit(entry: HabitEntry) {
-    this.habitEntryService.updateHabitEntry(entry._id, {
-      status: 'completed'
-    }).subscribe(() => {
-      this.loadHabitEntries();
-    });
+    this.habitEntryService
+      .updateHabitEntry(entry._id, {
+        status: 'completed',
+      })
+      .subscribe(() => {
+        this.loadHabitEntries();
+      });
   }
 
   missHabit(entry: HabitEntry) {
-    this.habitEntryService.updateHabitEntry(entry._id, {
-      status: 'missed'
-    }).subscribe(() => {
-      this.loadHabitEntries();
-    });
+    this.habitEntryService
+      .updateHabitEntry(entry._id, {
+        status: 'missed',
+      })
+      .subscribe(() => {
+        this.loadHabitEntries();
+      });
   }
 
   deleteHabitEntry(entry: HabitEntry) {
@@ -157,9 +151,7 @@ export class Calendar implements OnInit {
   previousMonth() {
     const date = this.currentDate();
 
-    this.currentDate.set(
-      new Date(date.getFullYear(), date.getMonth() - 1, 1)
-    );
+    this.currentDate.set(new Date(date.getFullYear(), date.getMonth() - 1, 1));
 
     this.selectedDay.set(null);
     this.selectedHabitId = '';
@@ -168,9 +160,7 @@ export class Calendar implements OnInit {
   nextMonth() {
     const date = this.currentDate();
 
-    this.currentDate.set(
-      new Date(date.getFullYear(), date.getMonth() + 1, 1)
-    );
+    this.currentDate.set(new Date(date.getFullYear(), date.getMonth() + 1, 1));
 
     this.selectedDay.set(null);
     this.selectedHabitId = '';
@@ -202,5 +192,5 @@ export class Calendar implements OnInit {
     };
 
     return labels[status] ?? status;
-  } 
+  }
 }

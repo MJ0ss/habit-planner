@@ -27,24 +27,15 @@
           </div>
 
           <div class="habit-actions">
-            <button (click)="editHabit(habit)">
-              Bearbeiten
-            </button>
+            <button (click)="editHabit(habit)">Bearbeiten</button>
 
-            <button
-              class="danger-button"
-              (click)="deleteHabit(habit._id)"
-            >
-              Löschen
-            </button>
+            <button class="danger-button" (click)="deleteHabit(habit._id)">Löschen</button>
           </div>
         </div>
       }
     </div>
   } @else {
-    <p class="empty-message">
-      Noch keine Habits vorhanden.
-    </p>
+    <p class="empty-message">Noch keine Habits vorhanden.</p>
   }
 
   <div class="add-habit">
@@ -53,11 +44,7 @@
     </h3>
 
     <div class="habit-form">
-      <input
-        type="text"
-        [(ngModel)]="newHabitName"
-        placeholder="Name des Habits"
-      />
+      <input type="text" [(ngModel)]="newHabitName" placeholder="Name des Habits" />
 
       <select [(ngModel)]="newHabitCategory">
         <option value="">Kategorie auswählen</option>
@@ -75,14 +62,9 @@
       </select>
 
       @if (editingHabitId) {
-        <button (click)="saveHabit()">
-          Änderungen speichern
-        </button>
+        <button (click)="saveHabit()">Änderungen speichern</button>
       } @else {
-        <button
-          (click)="addHabit()"
-          [disabled]="!newHabitName || !newHabitCategory"
-        >
+        <button (click)="addHabit()" [disabled]="!newHabitName || !newHabitCategory">
           Habit hinzufügen
         </button>
       }

@@ -44,9 +44,7 @@ describe('Auth', () => {
 
     await TestBed.configureTestingModule({
       imports: [Auth],
-      providers: [
-        { provide: AuthService, useValue: authServiceMock },
-      ],
+      providers: [{ provide: AuthService, useValue: authServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Auth);
@@ -102,9 +100,7 @@ describe('Auth', () => {
 
     component.login();
 
-    expect(component.message).toBe(
-      'Benutzername oder Passwort falsch'
-    );
+    expect(component.message).toBe('Benutzername oder Passwort falsch');
   });
 
   it('should clear the form when logging out', () => {

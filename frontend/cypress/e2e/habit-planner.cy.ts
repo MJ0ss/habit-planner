@@ -42,26 +42,18 @@ describe('Habit Planner', () => {
 
     cy.contains('button', 'Habit hinzufügen').click();
 
-    cy.contains('.habit-item', 'Joggen')
-      .should('contain', 'Positiv')
-      .and('contain', 'Sport');
+    cy.contains('.habit-item', 'Joggen').should('contain', 'Positiv').and('contain', 'Sport');
 
-    cy.contains('.habit-item', 'Joggen')
-      .contains('button', 'Bearbeiten')
-      .click();
+    cy.contains('.habit-item', 'Joggen').contains('button', 'Bearbeiten').click();
 
-    cy.get('input[placeholder="Name des Habits"]')
-      .clear()
-      .type('Laufen');
+    cy.get('input[placeholder="Name des Habits"]').clear().type('Laufen');
 
     cy.contains('button', 'Änderungen speichern').click();
 
     cy.contains('.habit-item', 'Laufen').should('be.visible');
     cy.contains('.habit-item', 'Joggen').should('not.exist');
 
-    cy.contains('.habit-item', 'Laufen')
-      .contains('button', 'Löschen')
-      .click();
+    cy.contains('.habit-item', 'Laufen').contains('button', 'Löschen').click();
 
     cy.contains('.habit-item', 'Laufen').should('not.exist');
   });
@@ -87,16 +79,11 @@ describe('Habit Planner', () => {
     cy.get('select').eq(1).select('positive');
     cy.contains('button', 'Habit hinzufügen').click();
 
-    cy.get('.day')
-      .not('.empty')
-      .contains('strong', '15')
-      .click();
+    cy.get('.day').not('.empty').contains('strong', '15').click();
 
     cy.contains('Ausgewählter Tag: 15.').should('be.visible');
 
-    cy.get('.planning-section')
-      .find('select')
-      .select('Joggen');
+    cy.get('.planning-section').find('select').select('Joggen');
 
     cy.contains('button', 'Habit planen').click();
 
@@ -145,14 +132,9 @@ describe('Habit Planner', () => {
       .should('contain', 'Negativ')
       .and('contain', 'Ernährung');
 
-    cy.get('.day')
-      .not('.empty')
-      .contains('strong', '15')
-      .click();
+    cy.get('.day').not('.empty').contains('strong', '15').click();
 
-    cy.get('.planning-section')
-      .find('select')
-      .select('Fast Food');
+    cy.get('.planning-section').find('select').select('Fast Food');
 
     cy.contains('button', 'Negatives Ereignis eintragen').click();
 
@@ -164,9 +146,6 @@ describe('Habit Planner', () => {
 
     cy.contains('h3', 'Negative Habits').should('be.visible');
 
-    cy.contains('h4', 'Fast Food')
-      .parent()
-      .should('contain', 'Vorkommnisse')
-      .and('contain', '1');
+    cy.contains('h4', 'Fast Food').parent().should('contain', 'Vorkommnisse').and('contain', '1');
   });
 });

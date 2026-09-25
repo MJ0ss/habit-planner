@@ -18,17 +18,11 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(username: string, password: string) {
-    return this.http.post(
-      `${this.apiUrl}/register`,
-      { username, password }
-    );
+    return this.http.post(`${this.apiUrl}/register`, { username, password });
   }
 
   login(username: string, password: string) {
-    return this.http.post<AuthResponse>(
-      `${this.apiUrl}/login`,
-      { username, password }
-    );
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { username, password });
   }
 
   setSession(token: string, username: string) {

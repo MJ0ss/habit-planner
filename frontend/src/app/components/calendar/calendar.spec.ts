@@ -41,10 +41,7 @@ describe('Calendar', () => {
       });
     },
 
-    updateHabitEntry: (
-      id: string,
-      update: Partial<Omit<HabitEntry, '_id'>>
-    ) => {
+    updateHabitEntry: (id: string, update: Partial<Omit<HabitEntry, '_id'>>) => {
       lastUpdatedEntry = { id, update };
 
       return of({

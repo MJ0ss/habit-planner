@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient, withInterceptors,} from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController,} from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 
 import { HttpClient } from '@angular/common/http';
 import { authInterceptor } from './auth-interceptor';
@@ -36,9 +36,7 @@ describe('authInterceptor', () => {
 
     const req = httpTesting.expectOne('/api/test');
 
-    expect(req.request.headers.get('Authorization')).toBe(
-      'Bearer test-token'
-    );
+    expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
 
     req.flush({});
   });

@@ -1,14 +1,14 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization;
-  const token = authHeader?.split(' ')[1];
+  const token = authHeader?.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({
-      message: 'Nicht angemeldet',
+      message: "Nicht angemeldet",
     });
   }
 
@@ -18,7 +18,7 @@ function authenticateToken(req, res, next) {
     next();
   } catch {
     return res.status(403).json({
-      message: 'Ungültiger oder abgelaufener Token',
+      message: "Ungültiger oder abgelaufener Token",
     });
   }
 }

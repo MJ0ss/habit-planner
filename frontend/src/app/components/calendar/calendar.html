@@ -1,8 +1,6 @@
 <section class="card">
   <div class="calendar-header">
-    <button class="navigation-button" (click)="previousMonth()">
-      ← vorheriger Monat
-    </button>
+    <button class="navigation-button" (click)="previousMonth()">← vorheriger Monat</button>
 
     <div class="month-title">
       <h2>{{ monthName }}</h2>
@@ -11,9 +9,7 @@
       </button>
     </div>
 
-    <button class="navigation-button" (click)="nextMonth()">
-      nächster Monat →
-    </button>
+    <button class="navigation-button" (click)="nextMonth()">nächster Monat →</button>
   </div>
 
   <div class="calendar">
@@ -45,9 +41,7 @@
               [class.occurred]="entry.status === 'occurred'"
               [class.planned]="entry.status === 'planned'"
             >
-              <span>
-                {{ getHabitName(entry.habitId) }} - {{ getStatusLabel(entry.status) }}
-              </span>
+              <span> {{ getHabitName(entry.habitId) }} - {{ getStatusLabel(entry.status) }} </span>
 
               @if (entry.status === 'planned') {
                 <div class="entry-actions">
@@ -101,10 +95,7 @@
           }
         </select>
 
-        <button
-          (click)="planHabit()"
-          [disabled]="!selectedHabitId"
-        >
+        <button (click)="planHabit()" [disabled]="!selectedHabitId">
           @if (getSelectedHabit()?.type === 'negative') {
             Negatives Ereignis eintragen
           } @else {

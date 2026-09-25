@@ -7,10 +7,7 @@
   <div
     class="overall-stat"
     [class.low]="getOverallSuccessRate() < 50"
-    [class.medium]="
-      getOverallSuccessRate() >= 50 &&
-      getOverallSuccessRate() < 75
-    "
+    [class.medium]="getOverallSuccessRate() >= 50 && getOverallSuccessRate() < 75"
     [class.high]="getOverallSuccessRate() >= 75"
   >
     <span>Gesamterfolgsrate</span>
@@ -40,11 +37,9 @@
         @for (habit of habits(); track habit._id) {
           @if (
             habit.type === 'positive' &&
-            (
-              getPlannedCount(habit) > 0 ||
+            (getPlannedCount(habit) > 0 ||
               getCompletedCount(habit) > 0 ||
-              getMissedCount(habit) > 0
-            )
+              getMissedCount(habit) > 0)
           ) {
             <div class="habit-stat">
               <h4>{{ habit.name }}</h4>
@@ -64,10 +59,7 @@
                 <strong>{{ getMissedCount(habit) }}</strong>
               </div>
 
-              @if (
-                getCompletedCount(habit) +
-                getMissedCount(habit) > 0
-              ) {
+              @if (getCompletedCount(habit) + getMissedCount(habit) > 0) {
                 <div class="success-rate">
                   Erfolgsrate:
                   <strong>{{ getSuccessRate(habit) }} %</strong>
@@ -91,10 +83,7 @@
 
       <div class="habit-stat-grid">
         @for (habit of habits(); track habit._id) {
-          @if (
-            habit.type === 'negative' &&
-            getOccurredCount(habit) > 0
-          ) {
+          @if (habit.type === 'negative' && getOccurredCount(habit) > 0) {
             <div class="habit-stat negative-stat">
               <h4>{{ habit.name }}</h4>
 

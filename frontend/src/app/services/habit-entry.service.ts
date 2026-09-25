@@ -28,10 +28,7 @@ export class HabitEntryService {
   }
 
   updateHabitEntry(id: string, habitEntry: Partial<Omit<HabitEntry, '_id'>>) {
-    return this.http.put<HabitEntry>(
-      `${this.apiUrl}/${id}`,
-      habitEntry
-    );
+    return this.http.put<HabitEntry>(`${this.apiUrl}/${id}`, habitEntry);
   }
 
   deleteHabitEntry(id: string) {

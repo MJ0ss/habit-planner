@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController,} from '@angular/common/http/testing';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 
 import { AuthService } from './auth.service';
 
@@ -10,10 +10,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(AuthService);
@@ -31,9 +28,7 @@ describe('AuthService', () => {
   it('should send a POST request when registering', () => {
     service.register('michi', 'test123').subscribe();
 
-    const req = httpTesting.expectOne(
-      'http://localhost:3000/api/register'
-    );
+    const req = httpTesting.expectOne('http://localhost:3000/api/register');
 
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({
@@ -50,9 +45,7 @@ describe('AuthService', () => {
   it('should send a POST request when logging in', () => {
     service.login('michi', 'test123').subscribe();
 
-    const req = httpTesting.expectOne(
-      'http://localhost:3000/api/login'
-    );
+    const req = httpTesting.expectOne('http://localhost:3000/api/login');
 
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({

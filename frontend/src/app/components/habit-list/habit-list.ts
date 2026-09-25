@@ -11,7 +11,6 @@ import { Habit } from '../../models/habit';
   styleUrl: './habit-list.css',
   templateUrl: './habit-list.html',
 })
-
 export class HabitList implements OnInit {
   private habitEntryService = inject(HabitEntryService);
   private habitService = inject(HabitService);
@@ -34,12 +33,12 @@ export class HabitList implements OnInit {
     'Schlaf',
     'Social Media',
     'Konsum',
-    'Sonstiges'
+    'Sonstiges',
   ];
 
   ngOnInit() {
     this.loadHabits();
-  } 
+  }
 
   loadHabits() {
     this.habitService.loadHabits();
@@ -50,17 +49,19 @@ export class HabitList implements OnInit {
       return;
     }
 
-    this.habitService.addHabit({
-      name: this.newHabitName,
-      type: this.newHabitType,
-      category: this.newHabitCategory
-    }).subscribe(() => {
-      this.newHabitName = '';
-      this.newHabitType = 'positive';
-      this.newHabitCategory = '';
+    this.habitService
+      .addHabit({
+        name: this.newHabitName,
+        type: this.newHabitType,
+        category: this.newHabitCategory,
+      })
+      .subscribe(() => {
+        this.newHabitName = '';
+        this.newHabitType = 'positive';
+        this.newHabitCategory = '';
 
-      this.loadHabits();
-    })
+        this.loadHabits();
+      });
   }
 
   editHabit(habit: Habit) {
@@ -75,18 +76,20 @@ export class HabitList implements OnInit {
       return;
     }
 
-    this.habitService.updateHabit(this.editingHabitId, {
-      name: this.newHabitName,
-      type: this.newHabitType,
-      category: this.newHabitCategory
-    }).subscribe(() => {
-      this.editingHabitId = null;
-      this.newHabitName = '';
-      this.newHabitType = 'positive';
-      this.newHabitCategory = '';
+    this.habitService
+      .updateHabit(this.editingHabitId, {
+        name: this.newHabitName,
+        type: this.newHabitType,
+        category: this.newHabitCategory,
+      })
+      .subscribe(() => {
+        this.editingHabitId = null;
+        this.newHabitName = '';
+        this.newHabitType = 'positive';
+        this.newHabitCategory = '';
 
-      this.loadHabits();
-    });
+        this.loadHabits();
+      });
   }
 
   deleteHabit(id: string) {

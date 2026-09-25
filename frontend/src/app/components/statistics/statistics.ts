@@ -29,33 +29,25 @@ export class Statistics implements OnInit {
 
   getPlannedCount(habit: Habit) {
     return this.habitEntries().filter(
-      (entry) =>
-        entry.habitId === habit._id &&
-        entry.status === 'planned'
+      (entry) => entry.habitId === habit._id && entry.status === 'planned',
     ).length;
   }
 
   getCompletedCount(habit: Habit) {
     return this.habitEntries().filter(
-      (entry) =>
-        entry.habitId === habit._id &&
-        entry.status === 'completed'
+      (entry) => entry.habitId === habit._id && entry.status === 'completed',
     ).length;
   }
 
   getMissedCount(habit: Habit) {
     return this.habitEntries().filter(
-      (entry) =>
-        entry.habitId === habit._id &&
-        entry.status === 'missed'
+      (entry) => entry.habitId === habit._id && entry.status === 'missed',
     ).length;
   }
 
   getOccurredCount(habit: Habit) {
     return this.habitEntries().filter(
-      (entry) =>
-        entry.habitId === habit._id &&
-        entry.status === 'occurred'
+      (entry) => entry.habitId === habit._id && entry.status === 'occurred',
     ).length;
   }
 
@@ -75,22 +67,16 @@ export class Statistics implements OnInit {
   getOverallSuccessRate() {
     const relevantEntries = this.habitEntries().filter(
       (entry) =>
-        entry.status === 'completed' ||
-        entry.status === 'missed' ||
-        entry.status === 'occurred'
+        entry.status === 'completed' || entry.status === 'missed' || entry.status === 'occurred',
     );
 
     if (relevantEntries.length === 0) {
       return 0;
     }
 
-    const completedEntries = relevantEntries.filter(
-      (entry) => entry.status === 'completed'
-    ).length;
+    const completedEntries = relevantEntries.filter((entry) => entry.status === 'completed').length;
 
-    return Math.round(
-      (completedEntries / relevantEntries.length) * 100
-    );
+    return Math.round((completedEntries / relevantEntries.length) * 100);
   }
 
   getCategoryCount(category: string) {
@@ -101,11 +87,7 @@ export class Statistics implements OnInit {
     return this.habitEntries().filter(
       (entry) =>
         habitIds.includes(entry.habitId) &&
-        (
-          entry.status === 'completed' ||
-          entry.status === 'missed' ||
-          entry.status === 'occurred'
-        )
+        (entry.status === 'completed' || entry.status === 'missed' || entry.status === 'occurred'),
     ).length;
   }
 
@@ -116,28 +98,22 @@ export class Statistics implements OnInit {
 
     const uniqueCategories = [...new Set(categories)];
 
-    return uniqueCategories.filter(
-      (category) => this.getCategoryCount(category) > 0
-    );
+    return uniqueCategories.filter((category) => this.getCategoryCount(category) > 0);
   }
 
   hasPositiveHabitEntries() {
     return this.habits().some(
       (habit) =>
         habit.type === 'positive' &&
-        (
-          this.getPlannedCount(habit) > 0 ||
+        (this.getPlannedCount(habit) > 0 ||
           this.getCompletedCount(habit) > 0 ||
-          this.getMissedCount(habit) > 0
-        )
+          this.getMissedCount(habit) > 0),
     );
   }
 
   hasOccurredNegativeHabits() {
     return this.habits().some(
-      (habit) =>
-        habit.type === 'negative' &&
-        this.getOccurredCount(habit) > 0
+      (habit) => habit.type === 'negative' && this.getOccurredCount(habit) > 0,
     );
   }
 }

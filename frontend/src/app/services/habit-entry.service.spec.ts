@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { provideHttpClient,} from '@angular/common/http';
-import { provideHttpClientTesting, HttpTestingController,} from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 
 import { HabitEntryService } from './habit-entry.service';
 
@@ -10,10 +10,7 @@ describe('HabitEntryService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-      ],
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
 
     service = TestBed.inject(HabitEntryService);
@@ -40,9 +37,7 @@ describe('HabitEntryService', () => {
 
     service.loadHabitEntries();
 
-    const req = httpTesting.expectOne(
-      'http://localhost:3000/api/habit-entries'
-    );
+    const req = httpTesting.expectOne('http://localhost:3000/api/habit-entries');
 
     expect(req.request.method).toBe('GET');
 
@@ -60,9 +55,7 @@ describe('HabitEntryService', () => {
 
     service.addHabitEntry(newEntry).subscribe();
 
-    const req = httpTesting.expectOne(
-      'http://localhost:3000/api/habit-entries'
-    );
+    const req = httpTesting.expectOne('http://localhost:3000/api/habit-entries');
 
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(newEntry);
@@ -80,9 +73,7 @@ describe('HabitEntryService', () => {
 
     service.updateHabitEntry('entry1', update).subscribe();
 
-    const req = httpTesting.expectOne(
-      'http://localhost:3000/api/habit-entries/entry1'
-    );
+    const req = httpTesting.expectOne('http://localhost:3000/api/habit-entries/entry1');
 
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(update);
@@ -98,9 +89,7 @@ describe('HabitEntryService', () => {
   it('should send a DELETE request when deleting a habit entry', () => {
     service.deleteHabitEntry('entry1').subscribe();
 
-    const req = httpTesting.expectOne(
-      'http://localhost:3000/api/habit-entries/entry1'
-    );
+    const req = httpTesting.expectOne('http://localhost:3000/api/habit-entries/entry1');
 
     expect(req.request.method).toBe('DELETE');
 

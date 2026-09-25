@@ -38,7 +38,7 @@ describe('Statistics', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
+
   it('should calculate the success rate of a positive habit', () => {
     const habit = {
       _id: 'habit1',
