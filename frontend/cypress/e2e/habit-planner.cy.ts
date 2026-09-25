@@ -3,7 +3,7 @@ describe('Habit Planner', () => {
     const username = `e2e-user-${Date.now()}`;
     const password = 'test123';
 
-    cy.visit('http://localhost:4200');
+    cy.visit('/');
 
     cy.get('#username').type(username);
     cy.get('#password').type(password);
@@ -23,7 +23,7 @@ describe('Habit Planner', () => {
     const username = `e2e-habit-${Date.now()}`;
     const password = 'test123';
 
-    cy.visit('http://localhost:4200');
+    cy.visit('/');
 
     cy.get('#username').type(username);
     cy.get('#password').type(password);
@@ -62,7 +62,7 @@ describe('Habit Planner', () => {
     const username = `e2e-calendar-${Date.now()}`;
     const password = 'test123';
 
-    cy.visit('http://localhost:4200');
+    cy.visit('/');
 
     cy.get('#username').type(username);
     cy.get('#password').type(password);
@@ -111,7 +111,7 @@ describe('Habit Planner', () => {
     const username = `e2e-negative-${Date.now()}`;
     const password = 'test123';
 
-    cy.visit('http://localhost:4200');
+    cy.visit('/');
 
     cy.get('#username').type(username);
     cy.get('#password').type(password);
